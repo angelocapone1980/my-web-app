@@ -1,0 +1,39 @@
+version: '3.6'
+
+services:
+  db:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: "secret"
+    deploy:
+        replicas: 1
+        placement:
+          constraints:
+            - node.hostname == swarm1
+            - node.role == manager            
+    networks:
+        - back-end
+    volumes:
+      - db-data:/var/lib/mysql
+
+  result:
+    image: web-app
+    deploy:
+        replicas: 1  
+        placement:
+          constraints:
+            - node.hostname == swarm2        
+    ports:
+        - 5000:8080
+    networks:
+        - back-end
+        - front-end
+
+networks:
+  front-end:
+    driver: bridge
+  back-end:
+    driver: bridge
+
+volumes:
+  db-data:

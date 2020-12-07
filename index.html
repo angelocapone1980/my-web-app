@@ -1,17 +1,22 @@
 <HTML>
+
 <head>
 	<title>Form</title>
 	<script type=text/javascript src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 </head>
+
 <BODY>
 	Titolo: <input type="text" name="titolo" id="titolo" /> <br /><br />
 	Autore: <input type="text" name="autore" id="autore" /> <br /><br />
 	Prezzo: <input type="text" name="prezzo" id="prezzo" /> <br /><br />
 	Pagine: <input type="text" name="pagine" id="pagine" /> <br /><br />
 	<button id="myButton">Inserisci Libro</button>
+	<button id="mostra">Mostra Libri</button>
+	<div id="risultato"></div>
 	<script>
 		$(document).ready(function () {
 			$('#myButton').on('click', submitTheForm);
+			$('#mostra').on('click', mostra);
 		});
 		function submitTheForm() {
 			title = $('#titolo').val();
@@ -24,9 +29,22 @@
 				type: "POST",
 				cache: false,
 				dataType: "json",
-				success: function (data) { $("body").append($("<span>" + data.result + "</span>")); }
+				success: function (data) { alert(data.result); }
 			});
 		}
+
+		function mostra() {
+			$.ajax({
+				url: "/mostra",
+				type: "POST",
+				cache: false,
+				success: function (data) { 
+					$("#risultato").html(data);
+				}
+			});
+		}
+
 	</script>
 </BODY>
+
 </HTML>
